@@ -12,5 +12,11 @@ func main() {
 		fmt.Println(errmsg)
 		return
 	}
-	utils.ParseFile(filename)
+	Antcolony, err :=utils.ParseFile(filename)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(*Antcolony)
+
 }
