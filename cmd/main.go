@@ -12,5 +12,5 @@ func main() {
 		fmt.Println(errmsg)
 		return
 	}
-	fmt.Println(filename)
+	utils.ParseFile(filename)
 }
