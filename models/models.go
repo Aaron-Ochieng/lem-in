@@ -13,3 +13,7 @@ type Room struct {
 	IsVisited        bool
 	Coord_X, Coord_Y int
 }
+
+type Path struct {
+	Rooms []string
+}
