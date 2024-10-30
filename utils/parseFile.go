@@ -19,9 +19,10 @@ func ParseFile(filename string) (*models.AntColony, error) {
 
 	scanner := bufio.NewScanner(file)
 	colony := &models.AntColony{
-		Rooms: make(map[string][2]int),
 		Links: make(map[string][]string),
+		Rooms: make([]models.Room, 0),
 	}
+	room := &models.Room{}
 
 	lineNum := 0
 	var currentCommand string
@@ -61,8 +62,11 @@ func ParseFile(filename string) (*models.AntColony, error) {
 			if err != nil {
 				return nil, fmt.Errorf("invalid y-coordinate on line %d: %v", lineNum, err)
 			}
+			room.Name = parts[0]
+			room.Coord_X = x
+			room.Coord_Y = y
 
-			colony.Rooms[parts[0]] = [2]int{x, y}
+			colony.Rooms = append(colony.Rooms, *room)
 
 			if currentCommand == "##start" {
 				colony.Start = parts[0]
@@ -77,7 +81,6 @@ func ParseFile(filename string) (*models.AntColony, error) {
 			if len(parts) != 2 {
 				return nil, fmt.Errorf("invalid link definition on line %d", lineNum)
 			}
-
 			room1, room2 := parts[0], parts[1]
 			colony.Links[room1] = append(colony.Links[room1], room2)
 			colony.Links[room2] = append(colony.Links[room2], room1)
