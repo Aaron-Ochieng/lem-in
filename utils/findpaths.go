@@ -57,4 +57,15 @@ func OptimizePaths(paths []models.Path) []models.Path {
 	return optimized
 }
 
-
+func Check(path []string, optimized []models.Path) bool {
+	for _, optpath := range optimized{
+		for k := 1; k < len(path); k++ {
+			if k < len(optpath.Rooms) {
+				if path[k] == optpath.Rooms[k] {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
