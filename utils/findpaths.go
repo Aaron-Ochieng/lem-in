@@ -33,7 +33,7 @@ func FindPaths(colony *models.AntColony) []models.Path {
 		}
 	}
 
-	return allPaths
+	return OptimizePaths(allPaths)
 }
 
 // Helper function to check if a room is in a path
@@ -45,3 +45,16 @@ func containsRoom(path []string, room string) bool {
 	}
 	return false
 }
+
+func OptimizePaths(paths []models.Path) []models.Path {
+	optimized := make([]models.Path, 0)
+	optimized = append(optimized, paths[0])
+	for i := 1; i < len(paths); i++ {
+		if Check(paths[i].Rooms, optimized) {
+			optimized = append(optimized, paths[i])
+		}
+	}
+	return optimized
+}
+
+
