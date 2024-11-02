@@ -19,4 +19,6 @@ func main() {
 	}
 	paths := utils.FindPaths(Antcolony)
 	fmt.Println(paths)
+	ants := utils.PlaceAnts(Antcolony, paths)
+	fmt.Println(ants)
 }
