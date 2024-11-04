@@ -18,5 +18,9 @@ func main() {
 		return
 	}
 	paths, antsperpath, turns:= utils.FindPaths(Antcolony)
-	
+	moves := utils.MoveAnts(paths, antsperpath, turns)
+
+	for _, move := range moves {
+		fmt.Println(move)
+	} 
 }
