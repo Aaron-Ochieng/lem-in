@@ -30,16 +30,19 @@ func fileContents(filename string) (res []string, err error) {
 }
 func validateRoomCoordinates(s []string) bool {
 	if len(s) != 3 {
+		fmt.Printf("f1,%v\n", s)
 		return false
 	}
 
 	_, err := strconv.Atoi(s[1])
 
 	if err != nil {
+		fmt.Println("f2")
 		return false
 	}
 
 	if _, err = strconv.Atoi(s[2]); err != nil {
+		fmt.Println("f3")
 		return false
 	}
 
@@ -52,11 +55,15 @@ func roomConnection(s string) bool {
 }
 
 func splitRoomCordinates(s string) (string, bool) {
-	val := strings.Split(s, "")
+	val := strings.Split(s, " ")
 	return val[0], validateRoomCoordinates(val)
 }
 
 func ParseFile(filename string) (colony *models.AntColony, err error) {
+	colony = &models.AntColony{
+		Rooms: make(map[string][2]int),
+		Links: make(map[string][]string),
+	}
 	contents, err := fileContents(filename)
 	if err != nil {
 		return
@@ -78,7 +85,7 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 		// Locate start room
 		if strings.Contains(contents[i], "##start") {
 			roomname, bl := splitRoomCordinates(contents[i+1])
-			if !bl {
+			if !bl{
 				err = errors.New("invalid room coordinates")
 				return
 			}
@@ -88,7 +95,7 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 		// Locate end room
 		if strings.Contains(contents[i], "##end") {
 			roomname, bl := splitRoomCordinates(contents[i+1])
-			if !bl {
+			if !bl{
 				err = errors.New("invalid room coordinates")
 				return
 			}
@@ -111,8 +118,24 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 			// append it to a map
 			colony.Links[temp[0]] = []string{}
 		}
+		// Append the room links
+		if strings.Contains(contents[i], "-") {
+			if !roomConnection(contents[i]) {
+				err = errors.New("impropely linked rooms | same room connection")
+				return
+			}
+			val := strings.Split(contents[i], "-")
+
+			_, ok := colony.Links[val[0]]
+			if !ok {
+				err = errors.New("room name doesnot exist")
+				return
+			}
+			colony.Links[val[0]] = append(colony.Links[val[0]], val[1])
+		}
 
 	}
+
 
 	return
 }
