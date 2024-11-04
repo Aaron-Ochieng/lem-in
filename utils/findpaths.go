@@ -93,8 +93,8 @@ func Optimize2(paths []models.Path, colony *models.AntColony) []models.Path {
 func Check2(path []string, optimized []models.Path) (bool, int) {
 	for g, optpath := range optimized {
 		for k := 1; k < len(path)-1; k++ {
-			if k < len(optpath.Rooms) {
-				if path[k] == optpath.Rooms[k] {
+			for j :=1; j < len(optpath.Rooms)-1; j++{
+				if path[k] == optpath.Rooms[j] {
 					return false, g
 				}
 			}
