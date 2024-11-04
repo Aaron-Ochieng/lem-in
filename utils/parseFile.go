@@ -51,9 +51,9 @@ func roomConnection(s string) bool {
 	return len(val) == 2 && val[0] != val[1]
 }
 
-func splitRoomCordinates(s string) bool {
+func splitRoomCordinates(s string) (string, bool) {
 	val := strings.Split(s, "")
-	return validateRoomCoordinates(val)
+	return val[0], validateRoomCoordinates(val)
 }
 
 func ParseFile(filename string) (colony *models.AntColony, err error) {
@@ -75,6 +75,7 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 	}
 
 	for i := 1; i < len(contents); i++ {
+		// Locate start room
 
 	}
 
