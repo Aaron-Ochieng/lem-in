@@ -45,6 +45,11 @@ func validateRoomCoordinates(s []string) bool {
 	return true
 }
 
+func roomConnection(s string) bool {
+	val := strings.Split(s, "-")
+	return len(val) == 2 && val[0] != val[1]
+}
+
 func ParseFile(filename string) (*models.AntColony, error) {
 	file, err := os.Open(filename)
 	if err != nil {
