@@ -44,17 +44,17 @@ func containsRoom(path []string, room string) bool {
 }
 
 func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]models.Path, map[int][]int,int) {
-	shortest := OptimizedPaths1(paths)
-	shortopt := OptimizedPaths2(paths, Antcolony)
-	firstop := PlaceAnts(Antcolony, shortest)
-	secondop := PlaceAnts(Antcolony, shortopt)
-	turns1 := GenerateTurns(firstop,shortest)
-	turns2 := GenerateTurns(secondop, shortopt)
-	finalpath := shortest
+	shortest1 := OptimizedPaths1(paths)
+	shortest2 := OptimizedPaths2(paths, Antcolony)
+	firstop := PlaceAnts(Antcolony, shortest1)
+	secondop := PlaceAnts(Antcolony, shortest2)
+	turns1 := GenerateTurns(firstop,shortest1)
+	turns2 := GenerateTurns(secondop, shortest2)
+	finalpath := shortest1
 	finalAntspalced := firstop
 	turns := turns1
 	if turns1 > turns2 {
-		finalpath = shortopt
+		finalpath = shortest2
 		finalAntspalced = secondop
 		turns = turns2
 	}
@@ -91,8 +91,8 @@ func OptimizedPaths2(paths []models.Path, colony *models.AntColony) []models.Pat
 	optimized = append(optimized, paths[0])
 	for i := 1; i < len(paths); i++ {
 		if len(paths[i].Rooms)-1 <= half {
-			v, index := Check2(paths[i].Rooms, optimized)
-			if !v {
+			unique, index := Check2(paths[i].Rooms, optimized)
+			if !unique {
 				if len(optimized[index].Rooms) != len(paths[i].Rooms) {
 					optimized = Remove(optimized, index)
 					optimized = append(optimized, paths[i])
@@ -106,11 +106,11 @@ func OptimizedPaths2(paths []models.Path, colony *models.AntColony) []models.Pat
 }
 
 func Check2(path []string, optimized []models.Path) (bool, int) {
-	for g, optpath := range optimized {
+	for i, optpath := range optimized {
 		for k := 1; k < len(path)-1; k++ {
 			for j :=1; j < len(optpath.Rooms)-1; j++{
 				if path[k] == optpath.Rooms[j] {
-					return false, g
+					return false, i
 				}
 			}
 		}
