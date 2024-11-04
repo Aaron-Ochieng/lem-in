@@ -27,6 +27,23 @@ func fileContents(filename string) (res []string, err error) {
 	}
 	return
 }
+func validateRoomCoordinates(s []string) bool {
+	if len(s) != 3 {
+		return false
+	}
+
+	_, err := strconv.Atoi(s[1])
+
+	if err != nil {
+		return false
+	}
+
+	if _, err = strconv.Atoi(s[2]); err != nil {
+		return false
+	}
+
+	return true
+}
 
 func ParseFile(filename string) (*models.AntColony, error) {
 	file, err := os.Open(filename)
