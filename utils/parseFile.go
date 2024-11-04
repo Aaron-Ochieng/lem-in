@@ -85,6 +85,33 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 			colony.Start = roomname
 		}
 
+		// Locate end room
+		if strings.Contains(contents[i], "##end") {
+			roomname, bl := splitRoomCordinates(contents[i+1])
+			if !bl {
+				err = errors.New("invalid room coordinates")
+				return
+			}
+			colony.End = roomname
+		}
+
+		// Room with coordinates
+		if strings.Contains(contents[i], " ") {
+			temp := strings.Split(contents[i], " ")
+			if !validateRoomCoordinates(temp) {
+				err = errors.New("invalid room coordinates")
+				return
+			}
+			// check if room already exists
+			_, ok := colony.Links[temp[0]]
+			if ok {
+				err = errors.New("room already exist")
+				return
+			}
+			// append it to a map
+			colony.Links[temp[0]] = []string{}
+		}
+
 	}
 
 	return
