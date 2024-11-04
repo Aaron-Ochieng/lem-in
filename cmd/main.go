@@ -17,6 +17,5 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	paths := utils.FindPaths(Antcolony)
-	fmt.Println(paths)
+	paths, antsperpath, turns:= utils.FindPaths(Antcolony)
 }
