@@ -85,7 +85,7 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 		// Locate start room
 		if strings.Contains(contents[i], "##start") {
 			roomname, bl := splitRoomCordinates(contents[i+1])
-			if !bl{
+			if !bl {
 				err = errors.New("invalid room coordinates")
 				return
 			}
@@ -95,7 +95,7 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 		// Locate end room
 		if strings.Contains(contents[i], "##end") {
 			roomname, bl := splitRoomCordinates(contents[i+1])
-			if !bl{
+			if !bl {
 				err = errors.New("invalid room coordinates")
 				return
 			}
@@ -136,6 +136,14 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 
 	}
 
+	if colony.Start == "" {
+		err = errors.New("no colony starting point")
+		return
+	}
 
+	if colony.End == "" {
+		err = errors.New("no colony ending point")
+		return
+	}
 	return
 }
