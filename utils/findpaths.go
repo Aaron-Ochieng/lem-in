@@ -44,8 +44,8 @@ func containsRoom(path []string, room string) bool {
 }
 
 func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]models.Path, map[int][]int,int) {
-	shortest := OptimizePaths(paths)
-	shortopt := Optimize2(paths, Antcolony)
+	shortest := OptimizedPaths1(paths)
+	shortopt := OptimizedPaths2(paths, Antcolony)
 	firstop := PlaceAnts(Antcolony, shortest)
 	secondop := PlaceAnts(Antcolony, shortopt)
 	turns1 := GenerateTurns(firstop,shortest)
@@ -61,7 +61,7 @@ func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]mode
 	return finalpath, finalAntspalced,turns
 }
 
-func OptimizePaths(paths []models.Path) []models.Path {
+func OptimizedPaths1(paths []models.Path) []models.Path {
 	optimized := make([]models.Path, 0)
 	optimized = append(optimized, paths[0])
 	for i := 1; i < len(paths); i++ {
@@ -85,7 +85,7 @@ func Check(path []string, optimized []models.Path) bool {
 	return true
 }
 
-func Optimize2(paths []models.Path, colony *models.AntColony) []models.Path {
+func OptimizedPaths2(paths []models.Path, colony *models.AntColony) []models.Path {
 	half := colony.NumberOfAnts / 2
 	optimized := make([]models.Path, 0)
 	optimized = append(optimized, paths[0])
