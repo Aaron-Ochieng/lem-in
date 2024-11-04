@@ -51,6 +51,11 @@ func roomConnection(s string) bool {
 	return len(val) == 2 && val[0] != val[1]
 }
 
+func splitRoomCordinates(s string) bool {
+	val := strings.Split(s, "")
+	return validateRoomCoordinates(val)
+}
+
 func ParseFile(filename string) (colony *models.AntColony, err error) {
 	contents, err := fileContents(filename)
 	if err != nil {
@@ -67,6 +72,10 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 
 	if val == 0 {
 		err = errors.New("number of ants cannot be 0")
+	}
+
+	for i := 1; i < len(contents); i++ {
+
 	}
 
 	return
