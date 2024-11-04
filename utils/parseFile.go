@@ -10,6 +10,24 @@ import (
 	"lem-in/models"
 )
 
+func fileContents(filename string) (res []string, err error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, fmt.Errorf("error opening file: %v", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		text := scanner.Text()
+		if text != "" && (!strings.Contains(text, "#") || strings.Contains(text, "##end") || strings.Contains(text, "##start")) {
+			res = append(res, text)
+		}
+	}
+	return
+}
+
 func ParseFile(filename string) (*models.AntColony, error) {
 	file, err := os.Open(filename)
 	if err != nil {
