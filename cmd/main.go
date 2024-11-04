@@ -12,11 +12,11 @@ func main() {
 		fmt.Println(errmsg)
 		return
 	}
-	Antcolony, err :=utils.ParseFile(filename)
+	Antcolony, err := utils.ParseFile(filename)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(*Antcolony)
-
+	paths := utils.FindPaths(Antcolony)
+	fmt.Println(paths)
 }
