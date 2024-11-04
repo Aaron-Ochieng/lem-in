@@ -18,4 +18,5 @@ func main() {
 		return
 	}
 	paths, antsperpath, turns:= utils.FindPaths(Antcolony)
+	
 }
