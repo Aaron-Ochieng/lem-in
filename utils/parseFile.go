@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -10,7 +11,7 @@ import (
 	"lem-in/models"
 )
 
-func ParseFile(filename string) (*models.AntColony, error) {
+func fileContents(filename string) (res []string, err error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, fmt.Errorf("error opening file: %v", err)
@@ -18,81 +19,131 @@ func ParseFile(filename string) (*models.AntColony, error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	colony := &models.AntColony{
+
+	for scanner.Scan() {
+		text := scanner.Text()
+		if text != "" && (!strings.Contains(text, "#") || strings.Contains(text, "##end") || strings.Contains(text, "##start")) {
+			res = append(res, text)
+		}
+	}
+	return
+}
+func validateRoomCoordinates(s []string) bool {
+	if len(s) != 3 {
+		fmt.Printf("f1,%v\n", s)
+		return false
+	}
+
+	_, err := strconv.Atoi(s[1])
+
+	if err != nil {
+		fmt.Println("f2")
+		return false
+	}
+
+	if _, err = strconv.Atoi(s[2]); err != nil {
+		fmt.Println("f3")
+		return false
+	}
+
+	return true
+}
+
+func roomConnection(s string) bool {
+	val := strings.Split(s, "-")
+	return len(val) == 2 && val[0] != val[1]
+}
+
+func splitRoomCordinates(s string) (string, bool) {
+	val := strings.Split(s, " ")
+	return val[0], validateRoomCoordinates(val)
+}
+
+func ParseFile(filename string) (colony *models.AntColony, err error) {
+	colony = &models.AntColony{
 		Rooms: make(map[string][2]int),
 		Links: make(map[string][]string),
 	}
-
-	lineNum := 0
-	var currentCommand string
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		lineNum++
-
-		if lineNum == 1 {
-			colony.NumberOfAnts, err = strconv.Atoi(line)
-			if err != nil {
-				return nil, fmt.Errorf("invalid number of ants on line %d: %v", lineNum, err)
-			}
-			continue
-		}
-
-		if strings.HasPrefix(line, "#") {
-			if line == "##start" || line == "##end" {
-				currentCommand = line
-			}
-			continue
-		}
-
-		if strings.Contains(line, " ") {
-			// Room definition
-			parts := strings.Fields(line)
-			if len(parts) != 3 {
-				return nil, fmt.Errorf("invalid room definition on line %d", lineNum)
-			}
-
-			x, err := strconv.Atoi(parts[1])
-			if err != nil {
-				return nil, fmt.Errorf("invalid x-coordinate on line %d: %v", lineNum, err)
-			}
-
-			y, err := strconv.Atoi(parts[2])
-			if err != nil {
-				return nil, fmt.Errorf("invalid y-coordinate on line %d: %v", lineNum, err)
-			}
-
-			colony.Rooms[parts[0]] = [2]int{x, y}
-
-			if currentCommand == "##start" {
-				colony.Start = parts[0]
-				currentCommand = ""
-			} else if currentCommand == "##end" {
-				colony.End = parts[0]
-				currentCommand = ""
-			}
-		} else if strings.Contains(line, "-") {
-			// Link definition
-			parts := strings.Split(line, "-")
-			if len(parts) != 2 {
-				return nil, fmt.Errorf("invalid link definition on line %d", lineNum)
-			}
-
-			room1, room2 := parts[0], parts[1]
-			colony.Links[room1] = append(colony.Links[room1], room2)
-			colony.Links[room2] = append(colony.Links[room2], room1)
-		} else {
-			return nil, fmt.Errorf("invalid line format on line %d", lineNum)
-		}
+	contents, err := fileContents(filename)
+	if err != nil {
+		return
 	}
 
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("error reading file: %v", err)
+	// Number of ants
+	val, err := strconv.Atoi(contents[0])
+
+	if err != nil {
+		err = errors.New("invalid number of ants")
+		return
 	}
 
-	if colony.Start == "" || colony.End == "" {
-		return nil, fmt.Errorf("start or end room not defined")
+	if val == 0 {
+		err = errors.New("number of ants cannot be 0")
 	}
 
-	return colony, nil
+	for i := 1; i < len(contents); i++ {
+		// Locate start room
+		if strings.Contains(contents[i], "##start") {
+			roomname, bl := splitRoomCordinates(contents[i+1])
+			if !bl {
+				err = errors.New("invalid room coordinates")
+				return
+			}
+			colony.Start = roomname
+		}
+
+		// Locate end room
+		if strings.Contains(contents[i], "##end") {
+			roomname, bl := splitRoomCordinates(contents[i+1])
+			if !bl {
+				err = errors.New("invalid room coordinates")
+				return
+			}
+			colony.End = roomname
+		}
+
+		// Room with coordinates
+		if strings.Contains(contents[i], " ") {
+			temp := strings.Split(contents[i], " ")
+			if !validateRoomCoordinates(temp) {
+				err = errors.New("invalid room coordinates")
+				return
+			}
+			// check if room already exists
+			_, ok := colony.Links[temp[0]]
+			if ok {
+				err = errors.New("room already exist")
+				return
+			}
+			// append it to a map
+			colony.Links[temp[0]] = []string{}
+		}
+		// Append the room links
+		if strings.Contains(contents[i], "-") {
+			if !roomConnection(contents[i]) {
+				err = errors.New("impropely linked rooms | same room connection")
+				return
+			}
+			val := strings.Split(contents[i], "-")
+
+			_, ok := colony.Links[val[0]]
+			if !ok {
+				err = errors.New("room name doesnot exist")
+				return
+			}
+			colony.Links[val[0]] = append(colony.Links[val[0]], val[1])
+		}
+
+	}
+
+	if colony.Start == "" {
+		err = errors.New("no colony starting point")
+		return
+	}
+
+	if colony.End == "" {
+		err = errors.New("no colony ending point")
+		return
+	}
+	return
 }
