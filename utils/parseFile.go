@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -55,5 +56,18 @@ func ParseFile(filename string) (colony *models.AntColony, err error) {
 	if err != nil {
 		return
 	}
+
+	// Number of ants
+	val, err := strconv.Atoi(contents[0])
+
+	if err != nil {
+		err = errors.New("invalid number of ants")
+		return
+	}
+
+	if val == 0 {
+		err = errors.New("number of ants cannot be 0")
+	}
+
 	return
 }
