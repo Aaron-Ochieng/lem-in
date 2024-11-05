@@ -42,7 +42,7 @@ func ParseFile(filename string) (*models.AntColony, error) {
 		line := contents[i]
 
 		switch {
-		case strings.HasPrefix(line, "##start"):
+		case strings.Trim(line, " ") == "##start":
 			if i+1 >= len(contents) {
 				return nil, errors.New("missing start room definition")
 			}
