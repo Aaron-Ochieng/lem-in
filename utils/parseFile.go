@@ -95,7 +95,10 @@ func ParseFile(filename string) (*models.AntColony, error) {
 			if err := parseConnection(line, colony); err != nil {
 				return nil, err
 			}
+		default:
+			return nil, fmt.Errorf("unrecognized command, room or link: %s", line)
 		}
+
 	}
 
 	// Validate colony configuration
