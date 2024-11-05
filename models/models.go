@@ -16,3 +16,5 @@ type Room struct {
 type Path struct {
 	Rooms []string
 }
+
+var FileContents string
