@@ -70,10 +70,19 @@ L3-1
 ### Running the Program
 
 ```sh
-$ go run . <filename>
-```
+$ go run ./cmd <filename>
 
+```
 Replace `<filename>` with the path to the file containing the colony’s data.
+
+or 
+
+```sh
+
+$ ./run.sh
+
+```
+this uses a default file already in the working directory `file.txt`
 
 ### Room and Tunnel Requirements
 
