@@ -5,7 +5,7 @@ import (
 )
 
 // FindPaths finds all possible paths from start to end using BFS
-func FindPaths(colony *models.AntColony) ([]models.Path,map[int][]int, int) {
+func FindPaths(colony *models.AntColony) ([]models.Path, map[int][]int, int) {
 	var allPaths []models.Path
 	var queue [][]string
 	queue = append(queue, []string{colony.Start})
@@ -43,12 +43,12 @@ func containsRoom(path []string, room string) bool {
 	return false
 }
 
-func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]models.Path, map[int][]int,int) {
+func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]models.Path, map[int][]int, int) {
 	shortest1 := OptimizedPaths1(paths)
 	shortest2 := OptimizedPaths2(paths, Antcolony)
 	firstop := PlaceAnts(Antcolony, shortest1)
 	secondop := PlaceAnts(Antcolony, shortest2)
-	turns1 := GenerateTurns(firstop,shortest1)
+	turns1 := GenerateTurns(firstop, shortest1)
 	turns2 := GenerateTurns(secondop, shortest2)
 	finalpath := shortest1
 	finalAntspalced := firstop
@@ -58,7 +58,7 @@ func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]mode
 		finalAntspalced = secondop
 		turns = turns2
 	}
-	return finalpath, finalAntspalced,turns
+	return finalpath, finalAntspalced, turns
 }
 
 func OptimizedPaths1(paths []models.Path) []models.Path {
@@ -75,7 +75,7 @@ func OptimizedPaths1(paths []models.Path) []models.Path {
 func Check(path []string, optimized []models.Path) bool {
 	for _, optpath := range optimized {
 		for k := 1; k < len(path)-1; k++ {
-			for j :=1; j < len(optpath.Rooms)-1; j++{
+			for j := 1; j < len(optpath.Rooms)-1; j++ {
 				if path[k] == optpath.Rooms[j] {
 					return false
 				}
@@ -108,7 +108,7 @@ func OptimizedPaths2(paths []models.Path, colony *models.AntColony) []models.Pat
 func Check2(path []string, optimized []models.Path) (bool, int) {
 	for i, optpath := range optimized {
 		for k := 1; k < len(path)-1; k++ {
-			for j :=1; j < len(optpath.Rooms)-1; j++{
+			for j := 1; j < len(optpath.Rooms)-1; j++ {
 				if path[k] == optpath.Rooms[j] {
 					return false, i
 				}
