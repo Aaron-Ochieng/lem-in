@@ -15,7 +15,7 @@ func main() {
 	}
 	Antcolony, err := utils.ParseFile(filename)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ERROR: invalid data format")
 		return
 	}
 	paths, antsperpath, turns := utils.FindPaths(Antcolony)
