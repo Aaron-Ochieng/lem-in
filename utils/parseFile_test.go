@@ -106,3 +106,61 @@ func TestParseRoom(t *testing.T) {
 		t.Errorf("Expected 1 room, got %d", len(colony.Rooms))
 	}
 }
+
+// Test for parseConnection function
+func TestParseConnection(t *testing.T) {
+	colony := &models.AntColony{
+		Rooms: []models.Room{
+			{Name: "E"},
+			{Name: "F"},
+		},
+		Links: map[string][]string{
+			"E": {},
+			"F": {},
+		},
+	}
+
+	err := parseConnection("E-F", colony)
+	if err != nil {
+		t.Errorf("parseConnection failed for valid input: %v", err)
+	}
+
+	if len(colony.Links["E"]) != 1 || colony.Links["E"][0] != "F" {
+		t.Errorf("Expected connection 'E-F' missing or incorrect")
+	}
+	if len(colony.Links["F"]) != 1 || colony.Links["F"][0] != "E" {
+		t.Errorf("Expected connection 'F-E' missing or incorrect")
+	}
+}
+
+// Test for validateColony function
+func TestValidateColony(t *testing.T) {
+	colony := &models.AntColony{
+		Start: "G",
+		End:   "H",
+		Links: map[string][]string{
+			"G": {"H"},
+			"H": {"G"},
+		},
+	}
+
+	err := validateColony(colony)
+	if err != nil {
+		t.Errorf("validateColony failed for valid configuration: %v", err)
+	}
+
+	// Test missing start room
+	colony.Start = ""
+	err = validateColony(colony)
+	if err == nil || err.Error() != "no colony starting point defined" {
+		t.Errorf("Expected error for missing start room, got: %v", err)
+	}
+
+	// Test missing end room
+	colony.Start = "G"
+	colony.End = ""
+	err = validateColony(colony)
+	if err == nil || err.Error() != "no colony ending point defined" {
+		t.Errorf("Expected error for missing end room, got: %v", err)
+	}
+}
