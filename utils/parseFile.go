@@ -117,7 +117,11 @@ func fileContents(filename string) ([]string, error) {
 			lines = append(lines, text)
 			models.FileContents += text + "\n"
 		}
-		
+		if strings.HasPrefix(text, "#") {
+			if text != "##start" && text != "##end" {
+				return nil, fmt.Errorf("only ##start and ##end comments are allowed, got: %s", text)
+			}
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
