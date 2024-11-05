@@ -19,4 +19,4 @@ type Path struct {
 
 var FileContents string
 
-var existinglink = make(map[string]bool)
+var Existinglink = make(map[string]bool)

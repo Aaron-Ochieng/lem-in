@@ -179,6 +179,15 @@ func parseConnection(line string, colony *models.AntColony) error {
 		return fmt.Errorf("room does not exist: %s", parts[1])
 	}
 
+	link := strings.Join(parts, "")
+	link2 := parts[1] + parts[0]
+	if _, exists := models.Existinglink[link]; exists {
+        return fmt.Errorf("duplicate room connection: %s", link)
+    }
+
+	models.Existinglink[link] = true
+	models.Existinglink[link2] = true
+
 	// Add bidirectional connection
 	colony.Links[parts[0]] = append(colony.Links[parts[0]], parts[1])
 	colony.Links[parts[1]] = append(colony.Links[parts[1]], parts[0])
