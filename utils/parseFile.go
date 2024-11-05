@@ -113,10 +113,11 @@ func fileContents(filename string) ([]string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		text := scanner.Text()
-		if text != "" && (!strings.Contains(text, "#") || strings.Contains(text, "##end") || strings.Contains(text, "##start")) {
+		if text != "" && (!strings.HasPrefix(text, "#") || strings.HasPrefix(text, "##end") || strings.HasPrefix(text, "##start")) {
 			lines = append(lines, text)
 			models.FileContents += text + "\n"
 		}
+		
 	}
 
 	if err := scanner.Err(); err != nil {
