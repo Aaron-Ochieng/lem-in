@@ -111,6 +111,7 @@ func fileContents(filename string) ([]string, error) {
 		text := scanner.Text()
 		if text != "" && (!strings.Contains(text, "#") || strings.Contains(text, "##end") || strings.Contains(text, "##start")) {
 			lines = append(lines, text)
+			models.FileContents += text + "\n"
 		}
 	}
 
