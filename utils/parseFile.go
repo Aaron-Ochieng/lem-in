@@ -74,6 +74,10 @@ func ParseFile(filename string) (*models.AntColony, error) {
 
 		case strings.Contains(line, " "):
 			roomName, ok := parseRoom(line, colony)
+			if strings.HasPrefix(roomName, "L") || strings.HasPrefix(roomName, "#") {
+				fmt.Println(roomName)
+				return nil, fmt.Errorf("room cannot start with L or #: %s", roomName)
+			}
 			if !ok {
 				return nil, errors.New("invalid room coordinates")
 			}
