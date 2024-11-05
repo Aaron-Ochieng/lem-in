@@ -57,7 +57,7 @@ func ParseFile(filename string) (*models.AntColony, error) {
 			colony.Start = roomName
 			i++ // Skip the next line since we processed it
 
-		case strings.HasPrefix(line, "##end"):
+		case strings.Trim(line, " ") == "##end":
 			if i+1 >= len(contents) {
 				return nil, errors.New("missing end room definition")
 			}
