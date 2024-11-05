@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"lem-in/models"
 	"os"
 	"testing"
 )
@@ -82,5 +83,26 @@ func TestFileContents(t *testing.T) {
 	expectedLines := 9
 	if len(contents) != expectedLines {
 		t.Errorf("Expected %d lines, got %d", expectedLines, len(contents))
+	}
+}
+
+// Test for parseRoom function
+func TestParseRoom(t *testing.T) {
+	colony := &models.AntColony{
+		Rooms: make([]models.Room, 0),
+		Links: make(map[string][]string),
+	}
+
+	roomName, ok := parseRoom("D 3 3", colony)
+	if !ok {
+		t.Errorf("parseRoom failed for valid input")
+	}
+
+	if roomName != "D" {
+		t.Errorf("Expected room name 'D', got '%s'", roomName)
+	}
+
+	if len(colony.Rooms) != 1 {
+		t.Errorf("Expected 1 room, got %d", len(colony.Rooms))
 	}
 }
