@@ -64,3 +64,23 @@ func TestParseFile(t *testing.T) {
 		t.Errorf("Expected room 'A' to have 2 links, got %d", len(colony.Links["A"]))
 	}
 }
+
+// Test for fileContents function
+func TestFileContents(t *testing.T) {
+	tmpfile, err := createTempFile(testFileData)
+	if err != nil {
+		t.Fatalf("Failed to create temp file: %v", err)
+	}
+	defer os.Remove(tmpfile.Name())
+
+	contents, err := fileContents(tmpfile.Name())
+	if err != nil {
+		t.Fatalf("fileContents failed: %v", err)
+	}
+
+	// Expected non-comment, non-empty lines
+	expectedLines := 9
+	if len(contents) != expectedLines {
+		t.Errorf("Expected %d lines, got %d", expectedLines, len(contents))
+	}
+}
