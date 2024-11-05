@@ -19,6 +19,7 @@ func TestParseArgs(t *testing.T) {
 		t.Errorf("Expected input: 'input.txt', error: '', got input: '%s', error: '%s'", input, err)
 	}
 	os.Args = []string{"command", "input.txt", "extra_arg"}
+	input, err = ParseArgs()
 	if input != "" || err != "too many arguments" {
 		t.Errorf("Expected input: '', error: 'too many arguments', got input: '%s', error: '%s'", input, err)
 	}
