@@ -2,6 +2,7 @@ package utils
 
 import "lem-in/models"
 
+// finding maximum turns the paths to be optimized can have
 func GenerateTurns(option map[int][]int, paths []models.Path) int {
 	maxturns := 0
 	for i, path := range paths {

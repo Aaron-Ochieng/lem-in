@@ -2,6 +2,7 @@ package utils
 
 import "lem-in/models"
 
+//  function that assigns rooms to ants and places them
 func PlaceAnts(colony *models.AntColony, paths []models.Path) map[int][]int {
 	ants := colony.NumberOfAnts
 	pathants := make(map[int][]int)
@@ -15,6 +16,7 @@ func PlaceAnts(colony *models.AntColony, paths []models.Path) map[int][]int {
 	return pathants
 }
 
+// helper function to placeants that places recursively until an optimal solution is found
 func PlaceRecursively(ant int, paths []models.Path, pathants map[int][]int, path int) bool {
 	if ant == 1 || path == len(paths)-1 {
 		pathants[path] = append(pathants[path], ant)

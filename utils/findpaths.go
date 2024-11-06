@@ -61,6 +61,7 @@ func ChooseOptimumPath(paths []models.Path, Antcolony *models.AntColony) ([]mode
 	return finalpath, finalAntspalced, turns
 }
 
+// returns a slice of paths that don't share rooms 
 func OptimizedPaths1(paths []models.Path) []models.Path {
 	optimized := make([]models.Path, 0)
 	optimized = append(optimized, paths[0])
@@ -72,6 +73,7 @@ func OptimizedPaths1(paths []models.Path) []models.Path {
 	return optimized
 }
 
+// checks if a room in a path has already been utilized by other paths already stored in optimized paths
 func Check(path []string, optimized []models.Path) bool {
 	for _, optpath := range optimized {
 		for k := 1; k < len(path)-1; k++ {
@@ -85,6 +87,7 @@ func Check(path []string, optimized []models.Path) bool {
 	return true
 }
 
+// finds an optimized path set with unique paths apart from start and end 
 func OptimizedPaths2(paths []models.Path, colony *models.AntColony) []models.Path {
 	half := colony.NumberOfAnts / 2
 	optimized := make([]models.Path, 0)
@@ -105,6 +108,7 @@ func OptimizedPaths2(paths []models.Path, colony *models.AntColony) []models.Pat
 	return optimized
 }
 
+// checks if a path is unique and doesnt have common rooms with others
 func Check2(path []string, optimized []models.Path) (bool, int) {
 	for i, optpath := range optimized {
 		for k := 1; k < len(path)-1; k++ {
@@ -118,6 +122,7 @@ func Check2(path []string, optimized []models.Path) (bool, int) {
 	return true, 0
 }
 
+// removes a non unique path from the optimized paths
 func Remove(optimized []models.Path, index int) []models.Path {
 	new := make([]models.Path, 0)
 	for i, path := range optimized {

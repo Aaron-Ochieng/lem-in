@@ -5,6 +5,7 @@ import (
 	"lem-in/models"
 )
 
+// returns a slice of moves that indicates paths takes by each ant
 func MoveAnts(paths []models.Path, antsperroom map[int][]int, turns int) []string {
 	moves := make([]string, turns)
 	for i, path := range paths {
